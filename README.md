@@ -3,6 +3,6 @@
 1. Download firefox and the tree style tabs extension
 2. Password managers (1Password)
 3. Install [Homebrew](https://brew.sh/) via the default Terminal 
-4. Download shell ([Fish](https://fishshell.com/)), using Homebrew
+4. Download shell ([Fish](https://fishshell.com/)) using Homebrew and make Fish the default shell
 5. Point Fish at the Homebrew install (`fish_add_path /opt/homebrew/bin`)
 6. Install package manager (asdf or rtx)
