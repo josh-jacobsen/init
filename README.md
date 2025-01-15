@@ -2,4 +2,5 @@
 
 1. Download firefox and the tree style tabs extension
 2. Password managers (1Password)
-3. Download shell (Fish)
+3. Install [Homebrew](https://brew.sh/)
+4. Download shell (Fish)
