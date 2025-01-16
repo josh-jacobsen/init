@@ -8,8 +8,8 @@
    ```
     which fish (to get location)
     cat /etc/shells
-    echo <output of which fish> | sudo tee -a /etc/shells
-    chsh -s <output of which fish>
+    echo /opt/homebrew/bin/brew | sudo tee -a /etc/shells
+    chsh -s /opt/homebrew/bin/brew
    ```
 7. Point Fish at the Homebrew install (`fish_add_path /opt/homebrew/bin`)
 8. Install package manager (asdf or rtx)
