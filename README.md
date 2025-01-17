@@ -13,3 +13,9 @@
    ```
 7. Point Fish at the Homebrew install (`fish_add_path /opt/homebrew/bin`)
 8. Install package manager (asdf or rtx)
+    ```
+    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
+    Then add this line instead to your ~/.config/fish/config.fish
+    source ~/.asdf/asdf.fish
+    ```
+   
