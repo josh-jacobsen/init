@@ -18,4 +18,12 @@
     Then add this line instead to your ~/.config/fish/config.fish
     source ~/.asdf/asdf.fish
     ```
-   
+9. Install neovim:
+10. Install build dependancies:
+    ```
+    brew install ninja cmake gettext curl
+
+    ```
+    ```
+    git clone https://github.com/neovim/neovim
+    cd neovim 
