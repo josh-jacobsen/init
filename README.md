@@ -19,7 +19,7 @@
     source ~/.asdf/asdf.fish
     ```
 9. Install neovim:
-10. Install build dependancies:
+ Install build dependancies:
     ```
     brew install ninja cmake gettext curl
 
@@ -39,3 +39,5 @@ rm -rf build/
 make distclean
 ```
 Then the same commands as above to build it 
+
+10. Install terminal (Ghostty) 
