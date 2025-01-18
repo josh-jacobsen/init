@@ -45,3 +45,4 @@ Then the same commands as above to build it
 ```
     brew install --cask ghostty
 ```
+11. Install aerospace 
