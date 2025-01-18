@@ -50,3 +50,6 @@ Then the same commands as above to build it
     ```
     brew install --cask shottr
     ```
+
+    Misc brew installs:
+    `brew install stow` (for managing dotfiles)
