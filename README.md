@@ -40,4 +40,8 @@ make distclean
 ```
 Then the same commands as above to build it 
 
-10. Install terminal emulator (Ghostty) 
+10. Install terminal emulator (Ghostty)
+
+```
+    brew install --cask ghostty
+```
