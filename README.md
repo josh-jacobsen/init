@@ -46,3 +46,7 @@ Then the same commands as above to build it
     brew install --cask ghostty
 ```
 11. Install aerospace 
+12. Install clipboard tool (shottr)
+    ```
+    brew install --cask shottr
+    ```
