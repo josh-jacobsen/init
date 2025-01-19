@@ -53,8 +53,9 @@ Then the same commands as above to build it
 
     Misc brew installs:
     `brew install stow` (for managing dotfiles)
+    `brew install ripgrep` for neovim
 
-13. Install Node (required for neovim setup for vscode debugger)
+14. Install Node (required for neovim setup for vscode debugger)
 ```
 asdf plugin add nodejs
 ```
