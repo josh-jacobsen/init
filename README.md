@@ -54,6 +54,7 @@ Then the same commands as above to build it
     Misc brew installs:
     `brew install stow` (for managing dotfiles)
     `brew install ripgrep` for neovim
+    brew install lazygit
 
 14. Install Node (required for neovim setup for vscode debugger)
 ```
