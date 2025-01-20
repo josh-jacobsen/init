@@ -60,3 +60,8 @@ Then the same commands as above to build it
 ```
 asdf plugin add nodejs
 ```
+
+15. Install aerospace
+    ```
+    brew install --cask nikitabobko/tap/aerospace
+    ```
