@@ -56,6 +56,7 @@ Then the same commands as above to build it
     `brew install ripgrep` for neovim
     `brew install fzf` for neovim
     `brew install lazygit`
+    `brew install --cask raycast`
 
 14. Install Node (required for neovim setup for vscode debugger)
 ```
