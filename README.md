@@ -18,55 +18,41 @@
     Then add this line instead to your ~/.config/fish/config.fish
     source ~/.asdf/asdf.fish
     ```
-9. Install neovim:
- Install build dependancies:
+9. Brew install build dependancies:
     ```
-    brew install ninja cmake gettext curl
+    brew install ninja cmake gettext curl ripgrep fzf
+   ```
 
+10. Install node
     ```
+    asdf plugin add nodejs
+    asdf install nodejs 20.18.1
+    ```
+9. Install neovim:
     ```
     git clone https://github.com/neovim/neovim
     cd neovim
     make CMAKE_BUILD_TYPE=RelWithDebInfo
     sudo make install
-```
-```
+    ```
 
 To change which version of neovim is built, checkout the branch. Run
 
-```
-rm -rf build/
-make distclean
-```
+   ```
+   rm -rf build/
+   make distclean
+   ```
 Then the same commands as above to build it 
 
-10. Install terminal emulator (Ghostty)
-
-```
-    brew install --cask ghostty
-```
-11. Install aerospace 
-12. Install clipboard tool (shottr)
+10. Install tooling via Brew:
     ```
+    brew install stow lazygit gh
+    brew install --cask raycast
+    brew install --cask visual-studio-code
     brew install --cask shottr
-    ```
-
-    Misc brew installs:
-    `brew install stow` (for managing dotfiles)
-    `brew install ripgrep` for neovim
-    `brew install fzf` for neovim
-    `brew install lazygit`
-    `brew install --cask raycast`
-        `brew install gh`
-    `brew install --cask visual-studio-code`
-
-
-14. Install Node (required for neovim setup for vscode debugger)
-```
-asdf plugin add nodejs
-```
-
-15. Install aerospace
-    ```
+    brew install --cask ghostty
     brew install --cask nikitabobko/tap/aerospace
+    
     ```
+
+
