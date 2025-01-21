@@ -55,6 +55,6 @@ To change which version of neovim is built, checkout the branch. Run
     brew install --cask 1password
     brew install --cask lastpass
     ```
-11. Set up SSH keys ([script]()) 
+11. Set up SSH keys ([script](https://github.com/josh-jacobsen/init/blob/main/setup_github_ssh.fish)) 
 
 
