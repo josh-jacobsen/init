@@ -38,11 +38,11 @@
 
 To change which version of neovim is built, checkout the branch. Run
 
-   ```
-   rm -rf build/
-   make distclean
-   ```
-Then the same commands as above to build it 
+      ```
+      rm -rf build/
+      make distclean
+      ```
+   Then the same commands as above to build it 
 
 10. Install tooling via Brew:
     ```
