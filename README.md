@@ -52,7 +52,8 @@ To change which version of neovim is built, checkout the branch. Run
     brew install --cask shottr
     brew install --cask ghostty
     brew install --cask nikitabobko/tap/aerospace
-    
+    brew install --cask 1password
+    brew install --cask lastpass
     ```
 
 
