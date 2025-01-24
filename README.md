@@ -47,6 +47,7 @@ To change which version of neovim is built, checkout the branch. Run
 10. Install tooling via Brew:
     ```
     brew install stow lazygit gh awscli
+    brew install --cask aws-vault
     brew install --cask raycast
     brew install --cask visual-studio-code
     brew install --cask shottr
