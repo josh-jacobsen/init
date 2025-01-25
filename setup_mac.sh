@@ -108,7 +108,7 @@ fi
 # Install additional tools via Brew
 log "Installing additional tools..."
 BREW_PACKAGES="stow lazygit gh awscli tmux"
-BREW_CASKS="aws-vault raycast visual-studio-code shottr ghostty 1password lastpass"
+BREW_CASKS="aws-vault raycast visual-studio-code shottr ghostty 1password lastpass firefox"
 
 for package in $BREW_PACKAGES; do
     brew install "$package"
