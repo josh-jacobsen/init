@@ -137,6 +137,21 @@ if [ ! -d ~/dotfiles ]; then
     cd ~
 fi
 
+# Install and setup tmux plugin manager
+log "Setting up tmux plugin manager..."
+if [ ! -d ~/.tmux/plugins/tpm ]; then
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
+
+# Start tmux server and install plugins
+log "Starting tmux and installing plugins..."
+tmux start-server
+tmux new-session -d
+sleep 1
+~/.tmux/plugins/tpm/scripts/install_plugins.sh
+tmux kill-server
+
+
 # Download and save SSH setup script
 log "Downloading SSH setup script..."
 curl -o ~/setup_github_ssh.fish https://raw.githubusercontent.com/josh-jacobsen/init/main/setup_github_ssh.fish
