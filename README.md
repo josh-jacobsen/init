@@ -20,7 +20,7 @@
     ```
 9. Brew install build dependancies:
     ```
-    brew install ninja cmake gettext curl ripgrep fzf
+    brew install ninja cmake gettext curl ripgrep fzf tmux
    ```
 
 10. Install node
