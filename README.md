@@ -1,7 +1,6 @@
 # Setting up a new machine 
 
-1. Download firefox and the tree style tabs extension
-2. Password managers (1Password)
+
 3. Install [Homebrew](https://brew.sh/) via the default Terminal 
 4. Download shell ([Fish](https://fishshell.com/)) using Homebrew
 5. Make Fish the default shell with:
@@ -20,7 +19,7 @@
     ```
 9. Brew install build dependancies:
     ```
-    brew install ninja cmake gettext curl ripgrep fzf tmux
+    brew install ninja cmake gettext curl ripgrep fzf 
    ```
 
 10. Install node
@@ -46,7 +45,7 @@ To change which version of neovim is built, checkout the branch. Run
 
 10. Install tooling via Brew:
     ```
-    brew install stow lazygit gh awscli
+    brew install stow lazygit gh awscli tmux
     brew install --cask aws-vault
     brew install --cask raycast
     brew install --cask visual-studio-code
@@ -56,6 +55,9 @@ To change which version of neovim is built, checkout the branch. Run
     brew install --cask 1password
     brew install --cask lastpass
     ```
-11. Set up SSH keys ([script](https://github.com/josh-jacobsen/init/blob/main/setup_github_ssh.fish)) 
+11. Set up SSH keys ([script](https://github.com/josh-jacobsen/init/blob/main/setup_github_ssh.fish))
+
+12. Download firefox and the tree style tabs extension
+13. Password managers (1Password)
 
 
