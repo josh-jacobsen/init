@@ -122,6 +122,21 @@ done
 brew tap nikitabobko/tap
 brew install --cask aerospace
 
+# Clone and setup dotfiles
+log "Cloning dotfiles repository..."
+if [ ! -d ~/dotfiles ]; then
+    git clone https://github.com/josh-jacobsen/dotfiles.git ~/dotfiles
+    cd ~/dotfiles
+    
+    # Get all top-level directories and stow each one
+    for dir in */; do
+        dir=${dir%/}  # Remove trailing slash
+        log "Stowing $dir..."
+        stow "$dir"
+    done
+    cd ~
+fi
+
 # Download and save SSH setup script
 log "Downloading SSH setup script..."
 curl -o ~/setup_github_ssh.fish https://raw.githubusercontent.com/josh-jacobsen/init/main/setup_github_ssh.fish
