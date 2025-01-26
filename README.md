@@ -58,8 +58,9 @@ To change which version of neovim is built, checkout the branch. Run
 
 11. Install tmux plugins like catpuchin from the repo (instaructions there)
     
-11. Set up nerd font for Fish via Fisher: `curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher`
+11. ~Set up nerd font for Fish via Fisher: `curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher`~
 
+12. Font: brew install --cask font-fira-code-nerd-font
     
 11. Set up SSH keys ([script](https://github.com/josh-jacobsen/init/blob/main/setup_github_ssh.fish))
 
