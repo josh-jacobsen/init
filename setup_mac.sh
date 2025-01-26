@@ -137,19 +137,15 @@ if [ ! -d ~/dotfiles ]; then
     cd ~
 fi
 
-# Install and setup tmux plugin manager
-log "Setting up tmux plugin manager..."
-if [ ! -d ~/.tmux/plugins/tpm ]; then
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-fi
+# Install and setup tmux extensions 
+log "Setting up tmux extensions..."
 
-# Start tmux server and install plugins
-log "Starting tmux and installing plugins..."
-tmux start-server
-tmux new-session -d
-sleep 1
-~/.tmux/plugins/tpm/scripts/install_plugins.sh
-tmux kill-server
+mkdir -p ~/.config/tmux/plugins/catppuccin
+git clone -b v2.1.2 https://github.com/catppuccin/tmux.git ~/.config/tmux/plugins/catppuccin/tmux
+```
+Add the following line to your tmux.conf file: run ~/.config/tmux/plugins/catppuccin/tmux/catppuccin.tmux
+```
+
 
 
 # Download and save SSH setup script
