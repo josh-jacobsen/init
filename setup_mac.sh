@@ -137,15 +137,9 @@ if [ ! -d ~/dotfiles ]; then
     cd ~
 fi
 
-# Install and setup tmux extensions 
-log "Setting up tmux extensions..."
-
+log "Installing catppuccin for tmux..."
 mkdir -p ~/.config/tmux/plugins/catppuccin
 git clone -b v2.1.2 https://github.com/catppuccin/tmux.git ~/.config/tmux/plugins/catppuccin/tmux
-```
-Add the following line to your tmux.conf file: run ~/.config/tmux/plugins/catppuccin/tmux/catppuccin.tmux
-```
-
 
 
 # Download and save SSH setup script
