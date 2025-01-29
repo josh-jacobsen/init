@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Download the file and save it. 
-# Then max executable with: chmod +x setup_mac.sh 
+# Then make executable with: chmod +x setup_mac.sh 
 # Then run with ./setup_mac.sh
 
 # Exit on error
