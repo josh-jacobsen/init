@@ -125,30 +125,46 @@ else
     log "Homebrew already installed"
 fi
 
-# Install Fish shell
-log "Installing Fish shell..."
-brew install fish
+# Check if Fish shell is already installed
+if command_exists fish; then
+    log "Fish shell is already installed"
+    FISH_PATH=$(which fish)
+else
+    # Install Fish shell
+    log "Installing Fish shell..."
+    brew install fish
+    FISH_PATH=$(which fish)
+fi
 
-# Get Fish shell path
-FISH_PATH=$(which fish)
 log "Fish shell path: $FISH_PATH"
 
-# Add Fish to allowed shells if not already present
-if ! grep -q "$FISH_PATH" /etc/shells; then
+# Check if Fish is already in allowed shells
+if grep -q "$FISH_PATH" /etc/shells; then
+    log "Fish shell is already in allowed shells"
+else
     log "Adding Fish to allowed shells..."
     echo "$FISH_PATH" | sudo tee -a /etc/shells
 fi
 
-# Set Fish as default shell
-log "Setting Fish as default shell..."
-chsh -s "$FISH_PATH"
+# Check if Fish is already the default shell
+if [ "$SHELL" = "$FISH_PATH" ]; then
+    log "Fish is already the default shell"
+else
+    log "Setting Fish as default shell..."
+    chsh -s "$FISH_PATH"
+fi
 
-# Create Fish config directory and file
+# Create Fish config directory if it doesn't exist
 mkdir -p ~/.config/fish
 FISH_CONFIG=~/.config/fish/config.fish
 
-# Add Homebrew to Fish PATH
-echo "fish_add_path $HOMEBREW_PREFIX/bin" >> "$FISH_CONFIG"
+# Check if Homebrew path is already in Fish config
+if [ -f "$FISH_CONFIG" ] && grep -q "fish_add_path $HOMEBREW_PREFIX/bin" "$FISH_CONFIG"; then
+    log "Homebrew path already in Fish config"
+else
+    log "Adding Homebrew to Fish PATH..."
+    echo "fish_add_path $HOMEBREW_PREFIX/bin" >> "$FISH_CONFIG"
+fi
 
 # Install asdf
 log "Installing asdf..."
