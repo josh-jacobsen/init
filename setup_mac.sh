@@ -36,48 +36,30 @@ install_cask() {
 }
 
 
-# Function to handle stow conflicts
-handle_stow_conflicts() {
+# Function to check if a directory is already stowed
+check_stow_status() {
     local dir="$1"
-    local backup_dir="$HOME/dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
-    
-    # Create backup directory
-    mkdir -p "$backup_dir"
+    local all_files_linked=true
     
     # Find all files that would be stowed
-    local stow_files=$(cd ~/dotfiles/$dir && find . -type f -not -path '*/\.*' -print)
-    
-    # Check each file for conflicts
+    cd ~/dotfiles/$dir
     while IFS= read -r file; do
         # Remove leading ./
         file="${file#./}"
         # Get the target path in home directory
         local target="$HOME/$file"
+        local source="$HOME/dotfiles/$dir/$file"
         
-        if [ -f "$target" ] && [ ! -L "$target" ]; then
-            log "Found existing file: $target"
-            read -p "File $target already exists. Backup and replace? (y/n) " choice
-            case "$choice" in
-                y|Y)
-                    # Create necessary subdirectories in backup
-                    mkdir -p "$(dirname "$backup_dir/$file")"
-                    # Backup the file
-                    mv "$target" "$backup_dir/$file"
-                    log "Backed up $target to $backup_dir/$file"
-                    ;;
-                n|N)
-                    log "Skipping $target"
-                    return 1
-                    ;;
-                *)
-                    log "Invalid choice. Skipping $target"
-                    return 1
-                    ;;
-            esac
+        # If target doesn't exist or isn't a symlink pointing to our dotfiles, 
+        # then this directory isn't fully stowed
+        if [ ! -L "$target" ] || [ "$(readlink "$target")" != "$source" ]; then
+            all_files_linked=false
+            break
         fi
-    done <<< "$stow_files"
+    done < <(find . -type f -not -path '*/\.*' -print)
+    cd - > /dev/null
     
-    return 0
+    $all_files_linked
 }
 
 
@@ -209,24 +191,24 @@ brew tap nikitabobko/tap
 brew install --cask aerospace
 
 # Clone and setup dotfiles
-log "Cloning dotfiles repository..."
+log "Setting up dotfiles..."
 if [ ! -d ~/dotfiles ]; then
+    log "Cloning dotfiles repository..."
     git clone https://github.com/josh-jacobsen/dotfiles.git ~/dotfiles
-    cd ~/dotfiles
-    
-    # Get all top-level directories and stow each one
-    for dir in */; do
-        dir=${dir%/}  # Remove trailing slash
-        log "Checking $dir for conflicts..."
-        if handle_stow_conflicts "$dir"; then
-            log "Stowing $dir..."
-            stow "$dir" || log "Failed to stow $dir"
-        else
-            log "Skipping stow for $dir due to unresolved conflicts"
-        fi
-    done
-    cd ~
 fi
+
+cd ~/dotfiles
+# Get all top-level directories and stow each one
+for dir in */; do
+    dir=${dir%/}  # Remove trailing slash
+    if check_stow_status "$dir"; then
+        log "Directory $dir is already stowed, skipping..."
+    else
+        log "Stowing $dir..."
+        stow "$dir" || log "Failed to stow $dir"
+    fi
+done
+cd ~
 
 log "Installing catppuccin for tmux..."
 mkdir -p ~/.config/tmux/plugins/catppuccin
