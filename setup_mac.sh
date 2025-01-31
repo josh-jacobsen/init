@@ -23,6 +23,34 @@ handle_error() {
     exit 1
 }
 
+# Function to install cask with error handling
+install_cask() {
+    local cask_name="$1"
+    local app_name="$2"
+    
+    # Check if the application is already installed
+    if [ -d "/Applications/${app_name}.app" ]; then
+        echo "Found existing installation of ${app_name}"
+        read -p "Do you want to reinstall ${app_name}? (y/n) " choice
+        case "$choice" in
+            y|Y)
+                log "Removing existing ${app_name} installation..."
+                rm -rf "/Applications/${app_name}.app"
+                brew install --cask "$cask_name" || log "Failed to install ${cask_name}"
+                ;;
+            n|N)
+                log "Skipping ${cask_name} installation..."
+                ;;
+            *)
+                log "Invalid choice. Skipping ${cask_name} installation..."
+                ;;
+        esac
+    else
+        brew install --cask "$cask_name" || log "Failed to install ${cask_name}"
+    fi
+}
+
+
 trap 'handle_error $LINENO' ERR
 
 # Detect CPU architecture
@@ -108,14 +136,26 @@ fi
 # Install additional tools via Brew
 log "Installing additional tools..."
 BREW_PACKAGES="stow lazygit gh awscli tmux"
-BREW_CASKS="aws-vault raycast visual-studio-code shottr ghostty 1password lastpass firefox"
-
 for package in $BREW_PACKAGES; do
     brew install "$package"
 done
 
-for cask in $BREW_CASKS; do
-    brew install --cask "$cask"
+# Install casks with proper error handling
+log "Installing cask applications..."
+# Define casks with their application names
+declare -A CASK_APPS=(
+    ["aws-vault"]="aws-vault"
+    ["raycast"]="Raycast"
+    ["visual-studio-code"]="Visual Studio Code"
+    ["shottr"]="Shottr"
+    ["ghostty"]="Ghostty"
+    ["1password"]="1Password"
+    ["lastpass"]="LastPass"
+    ["firefox"]="Firefox"
+)
+
+for cask in "${!CASK_APPS[@]}"; do
+    install_cask "$cask" "${CASK_APPS[$cask]}"
 done
 
 # Install Aerospace
