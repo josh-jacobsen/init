@@ -210,10 +210,15 @@ for dir in */; do
 done
 cd ~
 
-log "Installing catppuccin for tmux..."
-mkdir -p ~/.config/tmux/plugins/catppuccin
-git clone -b v2.1.2 https://github.com/catppuccin/tmux.git ~/.config/tmux/plugins/catppuccin/tmux
-
+# Check and install catppuccin for tmux
+CATPPUCCIN_DIR="$HOME/.config/tmux/plugins/catppuccin"
+if [ -d "$CATPPUCCIN_DIR" ]; then
+    log "Catppuccin for tmux already installed, skipping..."
+else
+    log "Installing catppuccin for tmux..."
+    mkdir -p "$CATPPUCCIN_DIR"
+    git clone -b v2.1.2 https://github.com/catppuccin/tmux.git "$CATPPUCCIN_DIR/tmux"
+fi
 
 # Download and save SSH setup script
 log "Downloading SSH setup script..."
