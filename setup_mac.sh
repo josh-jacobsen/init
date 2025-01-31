@@ -23,28 +23,13 @@ handle_error() {
     exit 1
 }
 
-# Function to install cask with error handling
+# Function to install cask with silent skipping of existing installations
 install_cask() {
     local cask_name="$1"
     local app_name="$2"
     
-    # Check if the application is already installed
     if [ -d "/Applications/${app_name}.app" ]; then
-        echo "Found existing installation of ${app_name}"
-        read -p "Do you want to reinstall ${app_name}? (y/n) " choice
-        case "$choice" in
-            y|Y)
-                log "Removing existing ${app_name} installation..."
-                rm -rf "/Applications/${app_name}.app"
-                brew install --cask "$cask_name" || log "Failed to install ${cask_name}"
-                ;;
-            n|N)
-                log "Skipping ${cask_name} installation..."
-                ;;
-            *)
-                log "Invalid choice. Skipping ${cask_name} installation..."
-                ;;
-        esac
+        log "${app_name} already installed, skipping..."
     else
         brew install --cask "$cask_name" || log "Failed to install ${cask_name}"
     fi
