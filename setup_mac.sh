@@ -23,6 +23,18 @@ handle_error() {
     exit 1
 }
 
+# Function to install cask with silent skipping of existing installations
+install_cask() {
+    local cask_name="$1"
+    local app_name="$2"
+    
+    if [ -d "/Applications/${app_name}.app" ]; then
+        log "${app_name} already installed, skipping..."
+    else
+        brew install --cask "$cask_name" || log "Failed to install ${cask_name}"
+    fi
+}
+
 trap 'handle_error $LINENO' ERR
 
 # Detect CPU architecture
@@ -52,30 +64,46 @@ else
     log "Homebrew already installed"
 fi
 
-# Install Fish shell
-log "Installing Fish shell..."
-brew install fish
+# Check if Fish shell is already installed
+if command_exists fish; then
+    log "Fish shell is already installed"
+    FISH_PATH=$(which fish)
+else
+    # Install Fish shell
+    log "Installing Fish shell..."
+    brew install fish
+    FISH_PATH=$(which fish)
+fi
 
-# Get Fish shell path
-FISH_PATH=$(which fish)
 log "Fish shell path: $FISH_PATH"
 
-# Add Fish to allowed shells if not already present
-if ! grep -q "$FISH_PATH" /etc/shells; then
+# Check if Fish is already in allowed shells
+if grep -q "$FISH_PATH" /etc/shells; then
+    log "Fish shell is already in allowed shells"
+else
     log "Adding Fish to allowed shells..."
     echo "$FISH_PATH" | sudo tee -a /etc/shells
 fi
 
-# Set Fish as default shell
-log "Setting Fish as default shell..."
-chsh -s "$FISH_PATH"
+# Check if Fish is already the default shell
+if [ "$SHELL" = "$FISH_PATH" ]; then
+    log "Fish is already the default shell"
+else
+    log "Setting Fish as default shell..."
+    chsh -s "$FISH_PATH"
+fi
 
-# Create Fish config directory and file
+# Create Fish config directory if it doesn't exist
 mkdir -p ~/.config/fish
 FISH_CONFIG=~/.config/fish/config.fish
 
-# Add Homebrew to Fish PATH
-echo "fish_add_path $HOMEBREW_PREFIX/bin" >> "$FISH_CONFIG"
+# Check if Homebrew path is already in Fish config
+if [ -f "$FISH_CONFIG" ] && grep -q "fish_add_path $HOMEBREW_PREFIX/bin" "$FISH_CONFIG"; then
+    log "Homebrew path already in Fish config"
+else
+    log "Adding Homebrew to Fish PATH..."
+    echo "fish_add_path $HOMEBREW_PREFIX/bin" >> "$FISH_CONFIG"
+fi
 
 # Install asdf
 log "Installing asdf..."
@@ -108,39 +136,53 @@ fi
 # Install additional tools via Brew
 log "Installing additional tools..."
 BREW_PACKAGES="stow lazygit gh awscli tmux"
-BREW_CASKS="aws-vault raycast visual-studio-code shottr ghostty 1password lastpass firefox"
-
 for package in $BREW_PACKAGES; do
     brew install "$package"
 done
 
-for cask in $BREW_CASKS; do
-    brew install --cask "$cask"
-done
+# Install cask applications
+log "Installing cask applications..."
+install_cask "aws-vault" "aws-vault"
+install_cask "raycast" "Raycast"
+install_cask "visual-studio-code" "Visual Studio Code"
+install_cask "shottr" "Shottr"
+install_cask "ghostty" "Ghostty"
+install_cask "lastpass" "LastPass"
+install_cask "1password" "1Password"
+install_cask "firefox" "Firefox"
 
 # Install Aerospace
 brew tap nikitabobko/tap
 brew install --cask aerospace
 
 # Clone and setup dotfiles
-log "Cloning dotfiles repository..."
+log "Setting up dotfiles..."
 if [ ! -d ~/dotfiles ]; then
+    log "Cloning dotfiles repository..."
     git clone https://github.com/josh-jacobsen/dotfiles.git ~/dotfiles
-    cd ~/dotfiles
-    
-    # Get all top-level directories and stow each one
-    for dir in */; do
-        dir=${dir%/}  # Remove trailing slash
-        log "Stowing $dir..."
-        stow "$dir"
-    done
-    cd ~
 fi
 
-log "Installing catppuccin for tmux..."
-mkdir -p ~/.config/tmux/plugins/catppuccin
-git clone -b v2.1.2 https://github.com/catppuccin/tmux.git ~/.config/tmux/plugins/catppuccin/tmux
+cd ~/dotfiles
+# Get all top-level directories and stow each one
+for dir in */; do
+    dir=${dir%/}  # Remove trailing slash
+    log "Stowing $dir with overwrite..."
+    # Remove existing stow directory if it exists
+    stow -D "$dir" 2>/dev/null || true
+    # Restow with --adopt flag to overwrite
+    stow --adopt -v "$dir" || log "Failed to stow $dir"
+done
+cd ~
 
+# Check and install catppuccin for tmux
+CATPPUCCIN_DIR="$HOME/.config/tmux/plugins/catppuccin"
+if [ -d "$CATPPUCCIN_DIR" ]; then
+    log "Catppuccin for tmux already installed, skipping..."
+else
+    log "Installing catppuccin for tmux..."
+    mkdir -p "$CATPPUCCIN_DIR"
+    git clone -b v2.1.2 https://github.com/catppuccin/tmux.git "$CATPPUCCIN_DIR/tmux"
+fi
 
 # Download and save SSH setup script
 log "Downloading SSH setup script..."
