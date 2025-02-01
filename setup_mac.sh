@@ -140,23 +140,16 @@ for package in $BREW_PACKAGES; do
     brew install "$package"
 done
 
-# Install casks with proper error handling
+# Install cask applications
 log "Installing cask applications..."
-# Define casks with their application names
-declare -A CASK_APPS=(
-    ["aws-vault"]="aws-vault"
-    ["raycast"]="Raycast"
-    ["visual-studio-code"]="Visual Studio Code"
-    ["shottr"]="Shottr"
-    ["ghostty"]="Ghostty"
-    ["1password"]="1Password"
-    ["lastpass"]="LastPass"
-    ["firefox"]="Firefox"
-)
-
-for cask in "${!CASK_APPS[@]}"; do
-    install_cask "$cask" "${CASK_APPS[$cask]}"
-done
+install_cask "aws-vault" "aws-vault"
+install_cask "raycast" "Raycast"
+install_cask "visual-studio-code" "Visual Studio Code"
+install_cask "shottr" "Shottr"
+install_cask "ghostty" "Ghostty"
+install_cask "lastpass" "LastPass"
+install_cask "1password" "1Password"
+install_cask "firefox" "Firefox"
 
 # Install Aerospace
 brew tap nikitabobko/tap
