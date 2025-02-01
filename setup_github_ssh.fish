@@ -55,14 +55,8 @@ Next steps:
 2. Add a new SSH key
 3. Paste the key from your clipboard
 4. Test with: ssh -T git@github.com
+5. If you encounter the error: git@github.com: Permission denied (publickey), add the key to the agent with: `ssh-add $ssh_key_path` 
 "
 end
 # Run the function
 setup_github_ssh
-
-# If you encounter the error that 
-# ```
-# user@user-MacBook-Pro> ssh -T git@github.com
-# git@github.com: Permission denied (publickey)
-# ```
-# You may need to add the key to the agent again with `ssh-add $ssh_key_path`
