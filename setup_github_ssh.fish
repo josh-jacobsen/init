@@ -59,3 +59,10 @@ Next steps:
 end
 # Run the function
 setup_github_ssh
+
+# If you encounter the error that 
+# ```
+# user@user-MacBook-Pro> ssh -T git@github.com
+# git@github.com: Permission denied (publickey)
+# ```
+# You may need to add the key to the agent again with `ssh-add $ssh_key_path`
