@@ -35,34 +35,6 @@ install_cask() {
     fi
 }
 
-
-# Function to check if a directory is already stowed
-check_stow_status() {
-    local dir="$1"
-    local all_files_linked=true
-    
-    # Find all files that would be stowed
-    cd ~/dotfiles/$dir
-    while IFS= read -r file; do
-        # Remove leading ./
-        file="${file#./}"
-        # Get the target path in home directory
-        local target="$HOME/$file"
-        local source="$HOME/dotfiles/$dir/$file"
-        
-        # If target doesn't exist or isn't a symlink pointing to our dotfiles, 
-        # then this directory isn't fully stowed
-        if [ ! -L "$target" ] || [ "$(readlink "$target")" != "$source" ]; then
-            all_files_linked=false
-            break
-        fi
-    done < <(find . -type f -not -path '*/\.*' -print)
-    cd - > /dev/null
-    
-    $all_files_linked
-}
-
-
 trap 'handle_error $LINENO' ERR
 
 # Detect CPU architecture
@@ -201,12 +173,11 @@ cd ~/dotfiles
 # Get all top-level directories and stow each one
 for dir in */; do
     dir=${dir%/}  # Remove trailing slash
-    if check_stow_status "$dir"; then
-        log "Directory $dir is already stowed, skipping..."
-    else
-        log "Stowing $dir..."
-        stow "$dir" || log "Failed to stow $dir"
-    fi
+    log "Stowing $dir with overwrite..."
+    # Remove existing stow directory if it exists
+    stow -D "$dir" 2>/dev/null || true
+    # Restow with --adopt flag to overwrite
+    stow --adopt -v "$dir" || log "Failed to stow $dir"
 done
 cd ~
 
