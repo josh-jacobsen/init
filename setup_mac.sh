@@ -93,23 +93,10 @@ else
     chsh -s "$FISH_PATH"
 fi
 
-# Create Fish config directory if it doesn't exist
-mkdir -p ~/.config/fish
-FISH_CONFIG=~/.config/fish/config.fish
-
-# Check if Homebrew path is already in Fish config
-if [ -f "$FISH_CONFIG" ] && grep -q "fish_add_path $HOMEBREW_PREFIX/bin" "$FISH_CONFIG"; then
-    log "Homebrew path already in Fish config"
-else
-    log "Adding Homebrew to Fish PATH..."
-    echo "fish_add_path $HOMEBREW_PREFIX/bin" >> "$FISH_CONFIG"
-fi
-
 # Install asdf
 log "Installing asdf..."
 if [ ! -d ~/.asdf ]; then
     git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
-    echo "source ~/.asdf/asdf.fish" >> "$FISH_CONFIG"
 fi
 
 # Install build dependencies
@@ -166,13 +153,42 @@ cd ~/dotfiles
 # Get all top-level directories and stow each one
 for dir in */; do
     dir=${dir%/}  # Remove trailing slash
-    log "Stowing $dir with overwrite..."
+    log "Stowing $dir..."
     # Remove existing stow directory if it exists
     stow -D "$dir" 2>/dev/null || true
-    # Restow with --adopt flag to overwrite
-    stow --adopt -v "$dir" || log "Failed to stow $dir"
+    # Restow without --adopt to preserve dotfiles
+    stow -v "$dir" || log "Failed to stow $dir"
 done
 cd ~
+
+# Configure Fish shell after dotfiles are stowed
+log "Configuring Fish shell paths..."
+FISH_CONFIG=~/.config/fish/config.fish
+
+# Function to safely add line to fish config if not already present
+add_to_fish_config() {
+    local line="$1"
+    if [ -f "$FISH_CONFIG" ]; then
+        if ! grep -Fq "$line" "$FISH_CONFIG"; then
+            log "Adding to Fish config: $line"
+            echo "$line" >> "$FISH_CONFIG"
+        else
+            log "Already in Fish config: $line"
+        fi
+    else
+        log "Fish config file not found, creating and adding: $line"
+        mkdir -p ~/.config/fish
+        echo "$line" >> "$FISH_CONFIG"
+    fi
+}
+
+# Add Homebrew path if not already present
+add_to_fish_config "fish_add_path $HOMEBREW_PREFIX/bin"
+
+# Add asdf source if asdf is installed and not already present
+if [ -d ~/.asdf ]; then
+    add_to_fish_config "source ~/.asdf/asdf.fish"
+fi
 
 # Check and install catppuccin for tmux
 CATPPUCCIN_DIR="$HOME/.config/tmux/plugins/catppuccin"
