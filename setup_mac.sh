@@ -134,7 +134,7 @@ fi
 
 # Install additional tools via Brew
 log "Installing additional tools..."
-BREW_PACKAGES="stow lazygit gh awscli tmux fd"
+BREW_PACKAGES="stow lazygit gh awscli tmux fd bruno"
 for package in $BREW_PACKAGES; do
     brew install "$package"
 done
