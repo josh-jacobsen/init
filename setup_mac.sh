@@ -110,6 +110,18 @@ asdf plugin add nodejs || true
 asdf install nodejs 20.18.1
 asdf global nodejs 20.18.1
 
+# Install Python using asdf
+log "Installing Python..."
+asdf plugin add python || true
+asdf install python 3.12.8
+asdf global python 3.12.8
+
+# Install Terraform using asdf
+log "Installing Terraform..."
+asdf plugin add terraform || true
+asdf install terraform 1.10.3
+asdf global terraform 1.10.3
+
 # Install Neovim from source
 log "Installing Neovim..."
 if [ ! -d ~/neovim ]; then
@@ -122,7 +134,7 @@ fi
 
 # Install additional tools via Brew
 log "Installing additional tools..."
-BREW_PACKAGES="stow lazygit gh awscli tmux"
+BREW_PACKAGES="stow lazygit gh awscli tmux fd"
 for package in $BREW_PACKAGES; do
     brew install "$package"
 done
