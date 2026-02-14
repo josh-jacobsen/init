@@ -4,8 +4,72 @@
 # Then make executable with: chmod +x setup_mac.sh
 # Then run with ./setup_mac.sh
 # For dry-run mode: ./setup_mac.sh --dry-run
+# For help: ./setup_mac.sh --help
 
+# Function to show help
+show_help() {
+    cat <<EOF
+macOS Development Environment Setup Script
 
+USAGE:
+    ./setup_mac.sh [OPTIONS]
+
+OPTIONS:
+    --help          Show this help message and exit
+    --dry-run       Show what would be installed without making changes
+
+DESCRIPTION:
+    This script automates the setup of a macOS development environment with
+    the following components:
+
+    Core Tools:
+    - Homebrew package manager
+    - Fish shell (set as default)
+    - asdf version manager
+    - Neovim (built from source)
+
+    Languages & Runtimes (via asdf):
+    - Node.js ${NODEJS_VERSION:-20.18.1}
+    - Python ${PYTHON_VERSION:-3.12.8}
+    - Terraform ${TERRAFORM_VERSION:-1.10.3}
+
+    Build Dependencies:
+    - ninja, cmake, gettext, curl, ripgrep, fzf
+
+    CLI Tools:
+    - stow, lazygit, gh, awscli, tmux, fd, bruno
+
+    Applications (Homebrew Casks):
+    - AWS Vault, Raycast, VS Code, Shottr, Ghostty
+    - LastPass, 1Password, Firefox, DBeaver Community
+    - Aerospace (window manager)
+
+    Additional Setup:
+    - Dotfiles (cloned from github.com/josh-jacobsen/dotfiles)
+    - Catppuccin theme for tmux
+    - SSH setup script (downloaded to ~/setup_github_ssh.fish)
+
+EXAMPLES:
+    # Normal installation
+    ./setup_mac.sh
+
+    # Preview what would be installed
+    ./setup_mac.sh --dry-run
+
+    # Show this help
+    ./setup_mac.sh --help
+
+NOTES:
+    - Script is idempotent - safe to run multiple times
+    - Existing installations will be skipped
+    - Requires sudo access for some operations
+    - Internet connection required
+
+For more information, visit: https://github.com/josh-jacobsen/init
+
+EOF
+    exit 0
+}
 
 # ============================================================================
 # Configuration - Update versions and packages here
@@ -13,13 +77,27 @@
 
 # Dry-run mode (set via --dry-run flag)
 DRY_RUN=false
-if [[ "$1" == "--dry-run" ]]; then
-    DRY_RUN=true
-    echo "=========================================="
-    echo "DRY-RUN MODE - No changes will be made"
-    echo "=========================================="
-    echo ""
-fi
+
+# Parse command line arguments
+for arg in "$@"; do
+    case $arg in
+        --help|-h)
+            show_help
+            ;;
+        --dry-run)
+            DRY_RUN=true
+            echo "=========================================="
+            echo "DRY-RUN MODE - No changes will be made"
+            echo "=========================================="
+            echo ""
+            ;;
+        *)
+            echo "Unknown option: $arg"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
 
 # Homebrew packages to install
 BREW_PACKAGES=(
