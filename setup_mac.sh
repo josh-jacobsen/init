@@ -142,6 +142,10 @@ PYTHON_VERSION="3.12.8"
 TERRAFORM_VERSION="1.10.3"
 CATPPUCCIN_TMUX_VERSION="v2.1.2"
 
+# Dotfiles configuration
+DOTFILES_REPO="https://github.com/josh-jacobsen/dotfiles.git"
+DOTFILES_DIR="$HOME/dotfiles"
+
 # Alternative: Use Brewfile instead of arrays
 # Set to true to generate and use a Brewfile for package management
 USE_BREWFILE=false
@@ -269,6 +273,41 @@ install_brew_package() {
     fi
 }
 
+# Function to check and install Xcode Command Line Tools
+check_xcode_tools() {
+    log "Checking for Xcode Command Line Tools..."
+
+    # Check if Command Line Tools are installed
+    if xcode-select -p &>/dev/null; then
+        log "Xcode Command Line Tools already installed at $(xcode-select -p)"
+        return 0
+    fi
+
+    log "Xcode Command Line Tools not found. Installing..."
+
+    if [ "$DRY_RUN" = true ]; then
+        log "Would install Xcode Command Line Tools"
+        return 0
+    fi
+
+    # Trigger the installation
+    xcode-select --install &>/dev/null || true
+
+    # Wait for user to complete the installation
+    log "Please complete the Xcode Command Line Tools installation in the dialog."
+    log "Waiting for installation to complete..."
+
+    # Poll until installation is complete
+    until xcode-select -p &>/dev/null; do
+        sleep 5
+    done
+
+    log "Xcode Command Line Tools installed successfully!"
+
+    # Accept the license
+    sudo xcodebuild -license accept 2>/dev/null || true
+}
+
 # Only trap errors for critical operations (Homebrew, Fish, asdf installation)
 # Package installation failures will be logged but not fatal
 trap 'handle_error $LINENO' ERR
@@ -282,6 +321,9 @@ else
 fi
 
 log "Starting setup for $ARCH architecture"
+
+# Check and install Xcode Command Line Tools (required for many installations)
+check_xcode_tools
 
 # Install Homebrew if not already installed
 if ! command_exists brew; then
@@ -476,17 +518,17 @@ fi
 
 # Clone and setup dotfiles
 log "Setting up dotfiles..."
-if [ ! -d ~/dotfiles ]; then
-    log "Cloning dotfiles repository..."
+if [ ! -d "$DOTFILES_DIR" ]; then
+    log "Cloning dotfiles repository from $DOTFILES_REPO..."
     if [ "$DRY_RUN" = false ]; then
-        git clone https://github.com/josh-jacobsen/dotfiles.git ~/dotfiles
+        git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
     fi
 else
-    log "Dotfiles directory already exists"
+    log "Dotfiles directory already exists at $DOTFILES_DIR"
 fi
 
-if [ "$DRY_RUN" = false ] && [ -d ~/dotfiles ]; then
-    cd ~/dotfiles
+if [ "$DRY_RUN" = false ] && [ -d "$DOTFILES_DIR" ]; then
+    cd "$DOTFILES_DIR"
     # Get all top-level directories and stow each one
     for dir in */; do
         dir=${dir%/}  # Remove trailing slash
